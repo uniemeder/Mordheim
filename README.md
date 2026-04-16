@@ -1,36 +1,32 @@
-# Mordheim Warband Manager (MVP)
+# Mordheim Mercenary Roster Builder (HTML5 + JS)
 
-A small Flask app to manage **Mordheim** campaign data:
+This project is now a **pure HTML5 + JavaScript** web app (no Python backend).
 
-- Users can manage their own warbands.
-- A match can include one or more warbands.
-- Match events can log gains/losses/xp/purchases/hires/injuries.
-- Dashboard view shows current warbands, matches, and outcomes.
+## Scope (current milestone)
 
-## Quickstart
+- Build a mercenary warband hero roster.
+- Support up to **6 hero slots**.
+- Restrict hero choices to mercenary-appropriate hero types:
+  - Captain (max 1)
+  - Champion (max 2)
+  - Youngblood (max 2)
+  - Promoted Henchman (max 1)
+- Track base hero costs + extra gear costs.
+- Persist/load roster in browser `localStorage`.
+
+## Run locally
+
+Open `index.html` directly in your browser,
+or serve with a static server, e.g.:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
+python -m http.server 8080
 ```
 
-Open: http://127.0.0.1:5000
+Then open: http://localhost:8080
 
-## Data model (initial)
+## Next steps
 
-- `User` (owner)
-- `Warband` (name, faction, treasury)
-- `Match` (scenario, date)
-- `MatchEvent` (event log with gold/xp deltas)
-- `match_warbands` (many-to-many join table)
-
-## Notes
-
-This is an MVP scaffold. Next good steps:
-
-1. Add authentication and per-user access controls.
-2. Split event types into richer domain entities (injuries, equipment, roster changes).
-3. Add campaign progression reports and charting.
-4. Add API endpoints and frontend SPA if desired.
+- Add henchmen groups and unit caps.
+- Add injury and advancement workflow after matches.
+- Add campaign/match logging and dashboard views.
