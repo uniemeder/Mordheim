@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mordheim Warband Manager</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 1.5rem; background: #121212; color: #f4f4f4; }
+    h1, h2 { color: #ffe08a; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .card { background: #1f1f1f; padding: 1rem; border-radius: 8px; border: 1px solid #333; }
+    label { display: block; margin-top: 0.5rem; font-size: 0.9rem; }
+    input, select, button, textarea { width: 100%; margin-top: 0.3rem; padding: 0.5rem; border-radius: 6px; border: 1px solid #444; background: #2a2a2a; color: #fff; }
+    button { background: #8a6b22; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { border-bottom: 1px solid #2b2b2b; padding: 0.4rem 0; }
+    .stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .stat { background: #222; padding: 0.5rem 0.8rem; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Mordheim Campaign Dashboard</h1>
+  <div class="stats">
+    <div class="stat">Events Logged: {{ total_events }}</div>
+    <div class="stat">Net Gold Change: {{ total_gold_change }}</div>
+    <div class="stat">Net XP Change: {{ total_xp_change }}</div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Create User</h2>
+      <form action="/users" method="post">
+        <label>Name <input name="name" required></label>
+        <button type="submit">Add User</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Create Warband</h2>
+      <form action="/warbands" method="post">
+        <label>Name <input name="name" required></label>
+        <label>Faction <input name="faction" placeholder="Reiklanders, Sisters of Sigmar..." required></label>
+        <label>Owner
+          <select name="owner_id" required>
+            <option value="">Select owner</option>
+            {% for user in users %}
+              <option value="{{ user.id }}">{{ user.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Starting Gold Crown Treasury <input type="number" name="treasury_gc" value="0"></label>
+        <button type="submit">Add Warband</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Create Match</h2>
+      <form action="/matches" method="post">
+        <label>Scenario <input name="scenario" required></label>
+        <label>Participating warbands (Ctrl/Cmd+click for multiple)
+          <select name="warband_ids" multiple size="6" required>
+            {% for warband in warbands %}
+              <option value="{{ warband.id }}">{{ warband.name }} ({{ warband.faction }})</option>
+            {% endfor %}
+          </select>
+        </label>
+        <button type="submit">Log Match</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Log Match Event</h2>
+      <form action="/events" method="post">
+        <label>Match
+          <select name="match_id" required>
+            <option value="">Select match</option>
+            {% for match in matches %}
+              <option value="{{ match.id }}">#{{ match.id }} - {{ match.scenario }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Warband
+          <select name="warband_id" required>
+            <option value="">Select warband</option>
+            {% for warband in warbands %}
+              <option value="{{ warband.id }}">{{ warband.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Event Type
+          <select name="event_type" required>
+            <option value="gain">Gain</option>
+            <option value="loss">Loss</option>
+            <option value="xp">XP</option>
+            <option value="purchase">Purchase</option>
+            <option value="hire">Hire Henchman</option>
+            <option value="injury">Injury</option>
+          </select>
+        </label>
+        <label>Summary <textarea name="summary" required></textarea></label>
+        <label>Gold Change <input type="number" name="gold_change" value="0"></label>
+        <label>XP Change <input type="number" name="xp_change" value="0"></label>
+        <button type="submit">Add Event</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Warbands</h2>
+      <ul>
+        {% for warband in warbands %}
+          <li>
+            <strong>{{ warband.name }}</strong> — {{ warband.faction }}<br>
+            Owner: {{ warband.owner.name }} | Treasury: {{ warband.treasury_gc }} gc
+          </li>
+        {% else %}
+          <li>No warbands yet.</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Matches & Outcomes</h2>
+      <ul>
+        {% for match in matches %}
+          <li>
+            <strong>Match #{{ match.id }}</strong> — {{ match.scenario }} ({{ match.played_at.strftime('%Y-%m-%d') }})<br>
+            Warbands: {{ match.warbands | map(attribute='name') | join(', ') or 'N/A' }}
+            <ul>
+              {% for event in match.events %}
+                <li>{{ event.warband.name }} | {{ event.event_type }} | {{ event.summary }} (gc {{ event.gold_change }}, xp {{ event.xp_change }})</li>
+              {% else %}
+                <li>No events logged.</li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li>No matches yet.</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</body>
+</html>
