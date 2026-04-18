@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mordheim Campaign Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <section id="login-view" class="card">
+      <h1>Mordheim Campaign Login</h1>
+      <p>Login with username, account password, and campaign password.</p>
+      <form id="login-form" class="form-grid">
+        <label>
+          Login Name
+          <input id="login-username" required maxlength="40" placeholder="witch_hunter_anna">
+        </label>
+        <label>
+          Password
+          <input id="login-password" type="password" required maxlength="80">
+        </label>
+        <label>
+          Campaign Password
+          <input id="login-campaign-password" type="password" required maxlength="80" placeholder="MordheimSpring26">
+        </label>
+        <div class="actions full-width">
+          <button type="submit">Login / Register</button>
+        </div>
+      </form>
+      <p id="login-message" class="message"></p>
+    </section>
+
+    <section id="app-view" class="hidden">
+      <header class="card page-head">
+        <div>
+          <h1>Create and Manage Warbands</h1>
+          <p id="session-text"></p>
+        </div>
+        <button id="logout-btn" class="danger">Logout</button>
+      </header>
+
+      <section class="card">
+        <h2>Create Warband</h2>
+        <form id="create-warband-form" class="form-grid">
+          <label>
+            Warband Name
+            <input id="warband-name" required maxlength="60" placeholder="The Ash Knives">
+          </label>
+          <label>
+            Faction
+            <select id="warband-faction" required>
+              <option value="Reikland Mercenaries">Reikland Mercenaries</option>
+              <option value="Middenheim Mercenaries">Middenheim Mercenaries</option>
+              <option value="Marienburg Mercenaries">Marienburg Mercenaries</option>
+              <option value="Other">Other (Free mode only)</option>
+            </select>
+          </label>
+          <label>
+            Creation Mode
+            <select id="warband-mode" required>
+              <option value="standard">Standard Rules</option>
+              <option value="free">Free</option>
+            </select>
+          </label>
+          <label>
+            Starting Gold Crowns
+            <input id="warband-gc" type="number" min="0" value="500">
+          </label>
+
+          <label>
+            Captain Count
+            <input id="captain-count" type="number" min="0" value="1">
+          </label>
+          <label>
+            Champion Count
+            <input id="champion-count" type="number" min="0" value="2">
+          </label>
+          <label>
+            Youngblood Count
+            <input id="youngblood-count" type="number" min="0" value="2">
+          </label>
+          <label>
+            Extra Hero Count
+            <input id="extra-hero-count" type="number" min="0" value="0">
+          </label>
+          <label>
+            Hero Gear Budget
+            <input id="gear-budget" type="number" min="0" value="0">
+          </label>
+
+          <div class="actions full-width">
+            <button type="submit">Create Warband</button>
+          </div>
+        </form>
+        <p id="create-message" class="message"></p>
+      </section>
+
+      <section class="card">
+        <h2>Existing Warbands (read-only in this section)</h2>
+        <p>You can create and view warbands here. Changes must be done through logged transactions below.</p>
+        <div id="warband-list" class="warband-list"></div>
+      </section>
+
+      <section class="card">
+        <h2>Logged Warband Transactions</h2>
+        <form id="transaction-form" class="form-grid">
+          <label>
+            Warband
+            <select id="tx-warband-id" required></select>
+          </label>
+          <label>
+            Transaction Type
+            <select id="tx-type" required>
+              <option value="inbetween games">inbetween games</option>
+              <option value="pre-match events">Pre-Match Events</option>
+              <option value="match-events">Match-Events</option>
+              <option value="post-match">Post-match</option>
+            </select>
+          </label>
+          <label>
+            Date
+            <input id="tx-date" type="date" required>
+          </label>
+          <label>
+            Gold Delta (optional)
+            <input id="tx-gold-delta" type="number" value="0">
+          </label>
+          <label>
+            XP Delta (optional)
+            <input id="tx-xp-delta" type="number" value="0">
+          </label>
+          <label class="full-width">
+            Details
+            <textarea id="tx-details" required maxlength="1000" rows="4" placeholder="Include what happened, who was affected, dice-dependent outcomes if any, and any verification notes."></textarea>
+          </label>
+          <div class="actions full-width">
+            <button type="submit">Log Transaction</button>
+          </div>
+        </form>
+        <p id="tx-message" class="message"></p>
+
+        <div id="tx-log" class="tx-log"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
